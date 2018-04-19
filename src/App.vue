@@ -14,33 +14,33 @@
 </script>
 
 <style>
- /* https://color.adobe.com/CS04-color-theme-1994456/?showPublished=true */
+
+@import url('https://fonts.googleapis.com/css?family=Gugi');
+ 
  body {
      font-size: 18px;
-     padding: 20px 100px 0px 100px;
-     font-family: 'Avenir', Helvetica, Arial, sans-serif;
+     
+     font-family: 'Gugi', cursive;
      -webkit-font-smoothing: antialiased;
      -moz-osx-font-smoothing: grayscale;
+     background-color: #79baf5;
  }
  button {
-     color: #fff;
      min-width: 100px;
      line-height: 1em;
      border: none;
      border-radius: 5px;
-     color: white;
      padding: 5px;
      text-align: center;
      text-decoration: none;
-     display: inline-block;
      font-size: 1rem;
      margin: 4px 2px;
  }
  button.primary {
-     background-color: #F35537;
+     background-color: #09ad3d;
  }
  button.alternate {
-     background-color: #77C4D3;
+     background-color: #64e499;
  }
  button:focus {
      outline: none;
@@ -56,7 +56,7 @@
      padding: 10px;
  }
  a {
-     color: #77C4D3;
+     color: #02313a;
  }
  .flexWrapper {
      display:flex;
@@ -71,7 +71,8 @@
      width: 800px;
  }
  .feed {
-     width: 600px;
+     width: 100%;
+     
  }
  .feed img {
      width: 100%;

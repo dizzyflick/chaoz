@@ -102,9 +102,9 @@ app.post('/api/users', (req, res) => {
     return bcrypt.hash(req.body.password, saltRounds);
   }).then(hash => {
     return knex('users').insert({email: req.body.email, hash: hash, username:req.body.username,
-				 name:req.body.name, role: 'user'});
+				 name:req.body.name, role: 'user', heart: 0});
   }).then(ids => {
-    return knex('users').where('id',ids[0]).first().select('username','name','id');
+    return knex('users').where('id',ids[0]).first().select('username','name','id','heart');
   }).then(user => {
     let token = jwt.sign({ id: user.id }, jwtSecret, {
       expiresIn: '24h' // expires in 24 hours
@@ -123,7 +123,7 @@ app.post('/api/users', (req, res) => {
 
 // Get my account
 app.get('/api/me', verifyToken, (req,res) => {
-  knex('users').where('id',req.userID).first().select('username','name','id').then(user => {
+  knex('users').where('id',req.userID).first().select('username','name','id', 'chaoname', 'heart', 'strength').then(user => {
     res.status(200).json({user:user});
   }).catch(error => {
     res.status(500).json({ error });
@@ -133,24 +133,13 @@ app.get('/api/me', verifyToken, (req,res) => {
 app.get('/api/users/:id', (req, res) => {
   let id = parseInt(req.params.id);
   // get user record
-  knex('users').where('id',id).first().select('username','name','id').then(user => {
+  knex('users').where('id',id).first().select('username','name','id', 'chaoname', 'heart', 'strength').then(user => {
     res.status(200).json({user:user});
   }).catch(error => {
     res.status(500).json({ error });
   });
 });
 
-/*
-app.delete('/api/users/:id', (req, res) => {
-  let id = parseInt(req.params.id);
-  knex('users').where('id',id).first().del().then(user => {
-    res.sendStatus(200);    
-  }).catch(error => {
-    console.log(error);
-    res.status(500).json({ error });
-  });
-});
-*/
 
 // User Tweets //
 
@@ -190,20 +179,42 @@ app.post('/api/users/:id/tweets', verifyToken, upload.single('image'), (req, res
   });
 });
 
-/*
-app.delete('/api/users/:id/tweets/:tweetId', (req, res) => {
+//HEART
+
+app.get('/api/users/:id/heart', (req, res) => {
   let id = parseInt(req.params.id);
-  let tweetId = parseInt(req.params.tweetId);
+  knex('users').select('heart')
+    .where('users.id',id)
+    .then(heart => {
+      res.status(200).json({user:heart});
+    }).catch(error => {
+      console.log(error);
+      res.status(500).json({ error });
+    });
+});
+
+app.post('/api/users/:id/heart', verifyToken, upload.single('image'), (req, res) => {
+  let id = parseInt(req.params.id);
+  if (id !== req.userID) {
+    res.status(403).send();
+    return;
+  }
+  // check for an image
+  let path = ''
+  if (req.file)
+    path = req.file.path;
   knex('users').where('id',id).first().then(user => {
-    return knex('tweets').where({'user_id':id,id:tweetId}).first().del();
-  }).then(tweets => {
-    res.sendStatus(200);    
+    return knex('tweets').insert({user_id: id, tweet:req.body.tweet, created: new Date(), image:path});
+  }).then(ids => {
+    return knex('tweets').where('id',ids[0]).first();
+  }).then(tweet => {
+    res.status(200).json({tweet:tweet});
+    return;
   }).catch(error => {
     console.log(error);
     res.status(500).json({ error });
   });
 });
-*/
 
 // All Tweets //
 

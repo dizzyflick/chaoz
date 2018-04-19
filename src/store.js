@@ -22,9 +22,13 @@ export default new Vuex.Store({
     followers: [],
     followingView: [],
     followersView: [],
+    heart: '',
+    strength: '',
   },
   getters: {
     user: state => state.user,
+    heart: state => state.heart,
+    strength: state => state.strength,
     getToken: state => state.token,
     loggedIn: state => {
       if (state.token === '')
@@ -69,6 +73,12 @@ export default new Vuex.Store({
     setFeed (state, feed) {
       state.feed = feed;
     },
+    setHeart (state, heart) {
+      state.heart = heart;
+    },
+    setStrength (state, strength) {
+      state.strength = strength;
+    },
     setUserView (state, user) {
       state.userView = user;
     },
@@ -109,6 +119,8 @@ export default new Vuex.Store({
       return axios.post("/api/users",user).then(response => {
 	context.commit('setUser', response.data.user);
 	context.commit('setToken',response.data.token);
+	context.commit('setHeart', 0);
+	context.commit('setStrength', 0);
 	context.commit('setRegisterError',"");
 	context.commit('setLoginError',"");
 	context.dispatch('getFollowing');
@@ -116,6 +128,8 @@ export default new Vuex.Store({
       }).catch(error => {
 	context.commit('setUser',{});	
 	context.commit('setToken','');
+    context.commit('setHeart', 0);
+	context.commit('setStrength', 0);
 	context.commit('setLoginError',"");
 	if (error.response) {
 	  if (error.response.status === 403)
@@ -131,6 +145,8 @@ export default new Vuex.Store({
       return axios.post("/api/login",user).then(response => {
 	context.commit('setUser', response.data.user);
 	context.commit('setToken',response.data.token);
+	context.commit('setHeart', response.data.heart);
+	context.commit('setStrength', response.data.strength);
 	context.commit('setRegisterError',"");
 	context.commit('setLoginError',"");
 	context.dispatch('getFollowing');
@@ -153,6 +169,12 @@ export default new Vuex.Store({
       context.commit('setToken','');
     },
     // Users //
+    getfHeart(context,user) {
+      return axios.get("/api/users/" + user.id/heart)
+      .catch(err => {
+	console.log("getUser failed:",err);
+      });
+    },
     // get a user, must supply {username: username} of user you want to get
     getUser(context,user) {
       return axios.get("/api/users/" + user.id).then(response => {
@@ -171,6 +193,32 @@ export default new Vuex.Store({
     },
     // Tweeting //
     addTweet(context,tweet) {
+      // setup headers
+      let headers = getAuthHeader();
+      headers.headers['Content-Type'] = 'multipart/form-data'
+      // setup form data
+      let formData = new FormData();
+      formData.append('tweet',tweet.tweet);
+      if (tweet.image) {
+	formData.append('image',tweet.image);
+      }
+      axios.post("/api/users/" + context.state.user.id + "/tweets",formData,headers).then(response => {
+	return context.dispatch('getFeed');
+      }).catch(err => {
+	console.log("addTweet failed:",err);
+      });
+    },
+    addHeart(context) {
+      let current = getfHeart();
+      current = current + 1;
+      axios.post("/api/users/" + context.state.user.id + "/heart",current).then(response => {
+	return context.dispatch('getHeart');
+      }).catch(err => {
+	console.log("addTweet failed:",err);
+      });
+    },
+    // Item Grab //
+    addItem(context,tweet) {
       // setup headers
       let headers = getAuthHeader();
       headers.headers['Content-Type'] = 'multipart/form-data'
@@ -241,6 +289,20 @@ export default new Vuex.Store({
 	context.commit('setFeed',response.data.tweets);
       }).catch(err => {
 	console.log("getFeed failed:",err);
+      });
+    },
+    getHeart(context) {
+      return axios.get("/api/users/" + context.state.user.id + "/heart").then(response => {
+	context.commit('setHeart',response.data.tweets);
+      }).catch(err => {
+	console.log("getHeart failed:",err);
+      });
+    },
+    getStrength(context) {
+      return axios.get("/api/users/" + context.state.user.id + "/strength").then(response => {
+	context.commit('setStrength',response.data.tweets);
+      }).catch(err => {
+	console.log("getStrength failed:",err);
       });
     },
     // get list of people you are following

@@ -1,9 +1,7 @@
 <template>
   <div>
     <div v-for="item in feed" class="item">
-      <p class="idline"><span class="user">{{item.name}}</span><router-link :to="{ name: 'UserPage', params: {userID: item.userID}}"><span class="handle">@{{item.username}}</span></router-link><span class="time">{{item.created | since}}</span></p>
-      <p v-html="formatTweet(item.tweet)" class="tweet"></p>
-      <img v-bind:src="item.image"/>
+      <img v-bind:src="item.picID"/>
     </div>
   </div>
 </template>
@@ -12,6 +10,7 @@
  import moment from 'moment';
  import linkify from './linkify.js';
  export default {
+ 	oneItem: require('/Users/Emily/Documents/labs/cs224/redbird/static/images/hfruit.png'),
    name: 'FeedList',
    props: ['feed'],
    filters: {
@@ -35,6 +34,25 @@
 	 }
        });
        return moment(datetime).fromNow();
+     },
+     identify: function(itemID) {
+       if (itemID === "RF") {
+       	oneItem = "/static/images/round.png";
+       }
+       if (itemID === "SF") {
+       	oneItem = "/static/images/square.png";
+       }
+       if (itemID === "TF") {
+       	oneItem = "/static/images/triangle.png";
+       }
+       if (itemID === "DF") {
+       	oneItem = "/static/images/fruit.png";
+       }
+       if (itemID === "HF") {
+       	oneItem = "/static/images/hfruit.png";
+       }
+       
+       return itemID;
      },
    },
    methods: {

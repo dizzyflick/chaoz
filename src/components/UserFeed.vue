@@ -1,25 +1,26 @@
 <template>
   <div class="feed">
-    <div>
-      <form enctype="multipart/form-data" v-on:submit.prevent="tweet" class="tweetForm">
-	<textarea v-model="text" placeholder=""/>
-	<div v-bind:style="{inactive: !imagePreview, active:imagePreview }">
-	  <img class="preview" v-bind:src="imageData">
+  <div class="garden">
+  	<div class="side">
+  		<button v-on:click="explore">EXPLORE</button>
+  		<p> Current affection: {{ heartGet }} </p>
 	</div>
-	<div class="buttons">
-	  <div class="icon">
-	    <label for="file-input">
-	      <i class="far fa-image" aria-hidden="true"></i>
-	    </label>
-	    <input id="file-input" type="file" v-on:change="previewImage" accept="image/*" class="input-file">
-	  </div>
-	  <div class="buttonWrap">
-	    <button class="primary" type="submit">Tweet</button>
-	  </div>
-	</div>
-      </form>
+	<img class = "chao" src="/static/images/babychaoLG.gif"/>
+  </div>
+  <p> Hover! </p>
+  <div class="bag">
+  <div class="dropdown">
+    <img class="bag" src="/static/images/bag.png"/>
+    <div class="dropdown-content">
+    <img v-on:click="eatr" class = "item" src="/static/images/round.png"/>
+    <img v-on:click="eatt" class = "item" src="/static/images/triangle.png"/>
+    <img v-on:click="eats" class = "item" src="/static/images/square.png"/>
+    <img v-on:click="eath" class = "item" src="/static/images/hfruit.png"/>
+    <img v-on:click="eatd" class = "item" src="/static/images/dfruit.png"/>
     </div>
-    <feed-list v-bind:feed="feed" />
+  </div>
+  </div>
+   <feed-list v-bind:feed="feed" />
   </div>
 </template>
 
@@ -33,6 +34,8 @@
        imageData: '',
        imagePreview: false,
        file: '',
+       heart: 0,
+       strength: 0,
      }
    },
    components: { FeedList },
@@ -40,20 +43,135 @@
      feed: function() {
        return this.$store.getters.feed;
      },
+     heartGet: function() {
+       return this.$store.getters.heart;
+     },
+     strengthGet: function() {
+       return this.$store.getters.stength;
+     },
    },
    created: function() {
      this.$store.dispatch('getFeed');
+     this.$store.dispatch('getHeart');
    },
    methods: {
-     tweet: function() {
-       this.$store.dispatch('addTweet',{
-         tweet: this.text,
-	 image: this.file,
+     add: function() {
+     	console.log("hey");
+       this.$store.dispatch('addItem',{
+         tweet: "",
+	 image: "",
        }).then(tweet => {
 	 this.text = "";
 	 this.imageData = "";
 	 this.imagePreview = false;
        });
+     },
+     greet: function (event) {
+      // `this` inside methods point to the Vue instance
+      alert('Hello ' + this.user + '!')
+      // `event` is the native DOM event
+      alert(event.target.tagName);
+    },
+    eatr: function (event) {
+    	var rando = (Math.floor(Math.random() * 3));
+    	if (rando == 0) {
+       	alert('Your chao seems happy!');
+       }
+       else if (rando == 1) {
+       	alert('Your chao seems to have loved it!');
+       }
+       else if (rando == 2) {
+       	alert('Seems like your chao did not like that one...');
+       }
+    },
+    eatt: function (event) {
+    	var rando = (Math.floor(Math.random() * 3));
+    	if (rando == 0) {
+       	alert('Your chao seems happy!');
+       }
+       else if (rando == 1) {
+       	alert('Your chao seems to have loved it!');
+       }
+       else if (rando == 2) {
+       	alert('Seems like your chao did not like that one...');
+       }
+    },
+    eats: function (event) {
+    	var rando = (Math.floor(Math.random() * 3));
+    	if (rando == 0) {
+       	alert('Your chao seems happy!');
+       }
+       else if (rando == 1) {
+       	alert('Your chao seems to have loved it!');
+       }
+       else if (rando == 2) {
+       	alert('Seems like your chao did not like that one...');
+       }
+    },
+    eath: function (event) {
+    	var rando = (Math.floor(Math.random() * 3));
+    	if (rando == 0) {
+       	alert('Your chao seems happy!');
+       }
+       else if (rando == 1) {
+       	alert('Your chao seems to have loved it!');
+       }
+       else if (rando == 2) {
+       	alert('Seems like your chao did not like that one...');
+       }
+    },
+    eatd: function (event) {
+    	var rando = (Math.floor(Math.random() * 3));
+    	if (rando == 0) {
+       	alert('Your chao seems happy!');
+       }
+       else if (rando == 1) {
+       	alert('Your chao seems to have loved it!');
+       }
+       else if (rando == 2) {
+       	alert('Seems like your chao did not like that one...');
+       }
+    },
+    explore: function () {
+    	var rando = (Math.floor(Math.random() * 5));
+    	var itemID = "";
+    	var picID = "";
+      if (rando === 0) {
+       	itemID = "RF";
+       }
+       else if (rando === 1) {
+       	itemID = "SF";
+       }
+       else if (rando === 2) {
+       	itemID = "TF";
+       }
+       else if (rando === 3) {
+       	itemID = "DF";
+       }
+       else {
+       	itemID = "HF";
+       }
+      if (itemID === "RF") {
+       	picID = "round.png";
+       }
+       if (itemID === "SF") {
+       	picID = "square.png";
+       }
+       if (itemID === "TF") {
+       	picID = "triangle.png";
+       }
+       if (itemID === "DF") {
+       	picID = "dfruit.png";
+       }
+       if (itemID === "HF") {
+       	picID = "hfruit.png";
+       }
+      alert('Your chao found something!')
+      this.$store.dispatch('addItem',{
+         tweet: itemID,
+	 image: picID,
+       });
+       this.$store.dispatch('addHeart')
      },
      previewImage: function(event) {
        const input = event.target;
@@ -126,4 +244,103 @@
      max-width: 100%;
      max-height: 100%;
  }
+ .garden {
+ 	display:inline-block;
+ 	width: 100%;
+ 	background-image: url("/static/images/star.png");
+ 	background-size: auto;
+ 	border: none;
+    border-radius: 10px;
+    box-sizing: border-box;
+ }
+
+.chao {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+
+.side {
+	float: left;
+	padding: 20px;
+}
+
+.bag {
+	float: left; 
+	display: inline-block;
+	max-width: 100%;
+	float: left;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.bag img {
+	max-width: 100px;
+}
+
+.item {
+	float: left; 
+	display: inline-block;
+}
+
+button.explore {
+     background-color: #64e499;
+ }
+
+
+.dropbtn {
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+	padding: 16px;
+    display: none;
+    min-width: 160px;
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content img:hover {background-color: #f1f1f1;}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-info {
+    display: none;
+    min-width: 160px;
+}
+
+.dropdown-content:hover .dropdown-info {
+	cursor: pointer;
+    position: absolute;
+    display: block;
+    width: 10%; /* Full width (cover the whole page) */
+    height: 10%; /* Full height (cover the whole page) */
+    background-color: white;
+}
+
+feed {
+	margin: 0px;
+}
+.side p {
+	color: white;
+}
 </style>

@@ -99,7 +99,7 @@ let insertUsers = () => {
   users.forEach(user => {
     let hash = bcrypt.hashSync('test', saltRounds);
     promises.push(knex('users').insert({email: user.email, hash: hash, username: user.username,
-					name: user.name, role: 'user' }));
+					name: user.name, chaoname: user.chaoname, role: 'user' }));
   });
   return Promise.all(promises);
 }

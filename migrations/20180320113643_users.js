@@ -6,6 +6,11 @@ exports.up = function(knex, Promise) {
       table.string('hash');
       table.string('username');
       table.string('name');
+      table.string('chaoname');
+      table.integer('heart');
+      table.integer('strength');
+      table.integer('good');
+      table.integer('bad');
       table.string('role');
     }),
   ]);

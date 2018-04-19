@@ -1,12 +1,7 @@
 <template>
   <nav>
     <ul id="menu">
-      <li><img src="/static/images/red-bird.png"/></li>
       <li><router-link to="/">Home</router-link></li>
-      <li><form v-on:submit.prevent="search">
-	<input v-model="keywords" placeholder="Search">
-	<a href="#" v-on:click="search" class="search"><i class="fas fa-search"></i></a>
-      </form></li>
       <li class="right" v-if="loggedIn">
 	<router-link :to="{ name: 'UserPage', params: {userID: user.id}}">{{user.username}}</router-link> <a @click="logout" href="#">Logout</a></p>
       </li>
@@ -92,7 +87,16 @@
      text-align: center;
      line-height: 50px;
      color: #666;
+     background-color: #00d060;
+     padding: 10px;
+     border: none;
+     border-radius: 5px;
  }
+
+li a {
+	text-decoration: none;
+}
+
  /*Active color*/
  li a.active {
  }
